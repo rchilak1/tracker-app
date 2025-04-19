@@ -24,8 +24,8 @@ Follow these steps carefully to set up the application locally:
 
 Clone the GitHub repository to your local machine and navigate to the project directory:
 
-git clone https://github.com/<YOUR_USERNAME>/routine-app.git
-cd routine-app
+git clone https://github.com/rchilak1/tracker-app.git
+cd tracker-app
 
 <br>
 
