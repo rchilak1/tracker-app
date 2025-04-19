@@ -3,6 +3,18 @@
 include 'db_connect.php';
 $userId = 1;  // TODO: swap out for session/user logic later
 
+// reset once per day (using a session flag)
+session_start();
+if (!isset($_SESSION['did_reset']) || $_SESSION['did_reset'] !== date('Y-m-d')) {
+  $pdo->exec("
+    UPDATE HABITS
+    SET Status = 'Incomplete'
+    WHERE HabitID IN (SELECT HabitID FROM RECURRING_HABITS)
+  ");
+  $_SESSION['did_reset'] = date('Y-m-d');
+}
+
+
 // 1) Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Add a recurring task
