@@ -31,25 +31,26 @@ cd tracker-app
 
 ### Step 2: Set Up the Database
 
-Create your database and tables:
+The below command creates the database and all necessary tables (USERS, HABITS, RECURRING_HABITS, DAILY_HABITS, PROGRESS, STREAK_HISTORY, and NOTES):
 
-mysql -u <db_user> -p < create.sql
+mysql -u root < create.sql
 
-This script creates all necessary tables (USERS, HABITS, RECURRING_HABITS, DAILY_HABITS, PROGRESS, STREAK_HISTORY, and NOTES).
 
-To seed your database with example data (optional but recommended for quick testing):
 
-mysql -u <db_user> -p < load.sql
+This the tables with dummy data from the CSVs directory:
 
-This populates your tables with initial sample data located in the CSVs directory.
+mysql -u root < load.sql
+
+
 
 <br>
 
 ### Step 3: Configure Database Connection
 
-Open the file db_connect.php and set your database credentials as follows:
+Open the file db_connect.php and set your database credentials as described in the comments:
 
-<img width="1252" alt="image" src="https://github.com/user-attachments/assets/aede4fa0-2f71-4f88-8259-a5da4458e100" />
+<img width="678" alt="image" src="https://github.com/user-attachments/assets/93986cef-05f8-480f-b53a-16f6a1f3d04e" />
+
 
 <br>
 
@@ -90,8 +91,4 @@ Create a new branch: git checkout -b feature/your-feature-name
 Commit your changes: git commit -am "Description of your feature"
 
 Push the branch: git push origin feature/your-feature-name
-
-
-
-Built and maintained by the Routine App Team. Happy tracking!
 
