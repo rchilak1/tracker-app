@@ -1,0 +1,28 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+  line-height: 1.4;
+}
+h1 {
+  margin-bottom: 1rem;
+}
+section {
+  margin-bottom: 2rem;
+}
+h2 {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 0.3rem;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+li {
+  margin: 0.5rem 0;
+}
+nav a {
+  color: #333;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
