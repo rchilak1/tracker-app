@@ -71,8 +71,8 @@ $streakHistory = $historyStmt->fetchAll();
   </section>
 
   <nav>
-    <a href="main.php">← Main</a> |
-    <a href="graphs.php">Graphs →</a>
+  <a href="graphs.php">← Graphs</a> |
+  <a href="main.php">Main →</a>
   </nav>
 </body>
 </html>
