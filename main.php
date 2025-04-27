@@ -207,8 +207,8 @@ $notes = $pdo->query("
   </section>
 
   <nav>
-    <a href="streaks.php">Streaks</a> &middot;
-    <a href="graphs.php">Graphs</a>
+  <a href="streaks.php">Streaks</a> &middot;
+  <a href="graphs.php">Graphs</a>
   </nav>
 </body>
 </html>
