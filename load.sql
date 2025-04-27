@@ -1,3 +1,4 @@
+USE routine_app;
 -- load.sql (LOCAL enabled CSV loads)
 LOAD DATA LOCAL INFILE 'CSVs/users.csv' INTO TABLE Users
   FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'
