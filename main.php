@@ -1,10 +1,35 @@
 <?php
-// main.php
-include 'db_connect.php';
-$userId = 1;  // TODO: swap out for session/user logic later
-
-// reset once per day (using a session flag)
 session_start();
+
+// Initialize the PDO connection to the database
+try {
+  $pdo = new PDO('mysql:host=localhost;dbname=routine_app', 'root', '');
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+  echo 'Connection failed: ' . $e->getMessage();
+  exit;
+}
+
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit;
+}
+
+$userId = $_SESSION['user_id'];
+
+// Fetch the user's name from the database
+$stmt = $pdo->prepare("SELECT Name FROM Users WHERE UserID = ?");
+$stmt->execute([$userId]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+  echo 'User not found.';
+  exit;
+}
+
+$userName = htmlspecialchars($user['Name']);
+
+// Reset once per day (using a session flag)
 if (!isset($_SESSION['did_reset']) || $_SESSION['did_reset'] !== date('Y-m-d')) {
   $pdo->exec("
     UPDATE HABITS
@@ -14,69 +39,68 @@ if (!isset($_SESSION['did_reset']) || $_SESSION['did_reset'] !== date('Y-m-d')) 
   $_SESSION['did_reset'] = date('Y-m-d');
 }
 
-
-// 1) Handle form submissions
+// Handle form submissions (Add recurring task, daily task, or note)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Add a recurring task
-    if (!empty($_POST['recurring-task'])) {
-        $task = trim($_POST['recurring-task']);
-        $stmt = $pdo->prepare("
-            INSERT INTO HABITS (UserID, HabitName)
-            VALUES (?, ?)
-        ");
-        $stmt->execute([$userId, $task]);
-        $newId = $pdo->lastInsertId();
-        // Default to daily recurrence for now
-        $pdo->prepare("
-            INSERT INTO RECURRING_HABITS (HabitID, RecurrencePattern, DueDate)
-            VALUES (?, 'Daily', CURRENT_DATE)
-        ")->execute([$newId]);
+  // Add a recurring task
+  if (!empty($_POST['recurring-task'])) {
+    $task = trim($_POST['recurring-task']);
+    $stmt = $pdo->prepare("
+      INSERT INTO HABITS (UserID, HabitName)
+      VALUES (?, ?)
+    ");
+    $stmt->execute([$userId, $task]);
+    $newId = $pdo->lastInsertId();
+    // Default to daily recurrence for now
+    $pdo->prepare("
+      INSERT INTO RECURRING_HABITS (HabitID, RecurrencePattern, DueDate)
+      VALUES (?, 'Daily', CURRENT_DATE)
+    ")->execute([$newId]);
 
-        header("Location: main.php");
-        exit;
-    }
+    header("Location: main.php");
+    exit;
+  }
 
-    // Add a daily task
-    if (!empty($_POST['daily-task'])) {
-        $task = trim($_POST['daily-task']);
-        $stmt = $pdo->prepare("
-            INSERT INTO HABITS (UserID, HabitName)
-            VALUES (?, ?)
-        ");
-        $stmt->execute([$userId, $task]);
-        $newId = $pdo->lastInsertId();
-        $pdo->prepare("
-            INSERT INTO DAILY_HABITS (HabitID, UserID)
-            VALUES (?, ?)
-        ")->execute([$newId, $userId]);
+  // Add a daily task
+  if (!empty($_POST['daily-task'])) {
+    $task = trim($_POST['daily-task']);
+    $stmt = $pdo->prepare("
+      INSERT INTO HABITS (UserID, HabitName)
+      VALUES (?, ?)
+    ");
+    $stmt->execute([$userId, $task]);
+    $newId = $pdo->lastInsertId();
+    $pdo->prepare("
+      INSERT INTO DAILY_HABITS (HabitID, UserID)
+      VALUES (?, ?)
+    ")->execute([$newId, $userId]);
 
-        header("Location: main.php");
-        exit;
-    }
+    header("Location: main.php");
+    exit;
+  }
 
-    // Add a note
-    if (!empty($_POST['user-note'])) {
-        $note = trim($_POST['user-note']);
-        $stmt = $pdo->prepare("
-            INSERT INTO NOTES (UserID, Content)
-            VALUES (?, ?)
-        ");
-        $stmt->execute([$userId, $note]);
+  // Add a note
+  if (!empty($_POST['user-note'])) {
+    $note = trim($_POST['user-note']);
+    $stmt = $pdo->prepare("
+      INSERT INTO NOTES (UserID, Content)
+      VALUES (?, ?)
+    ");
+    $stmt->execute([$userId, $note]);
 
-        header("Location: main.php");
-        exit;
-    }
+    header("Location: main.php");
+    exit;
+  }
 }
 
-// 2) Fetch recurring tasks (with their status)
+// Fetch recurring tasks
 $recurringTasks = $pdo->query("
-    SELECT H.HabitID, H.HabitName, H.Status
-    FROM HABITS H
-    JOIN RECURRING_HABITS R ON H.HabitID = R.HabitID
-    WHERE H.UserID = $userId
+  SELECT H.HabitID, H.HabitName, H.Status
+  FROM HABITS H
+  JOIN RECURRING_HABITS R ON H.HabitID = R.HabitID
+  WHERE H.UserID = $userId
 ")->fetchAll();
 
-// 3) Fetch daily tasks, excluding any that are in RECURRING_HABITS
+// Fetch daily tasks
 $stmt = $pdo->prepare("
   SELECT H.HabitID, H.HabitName, H.Status
   FROM HABITS H
@@ -89,15 +113,15 @@ $stmt = $pdo->prepare("
 $stmt->execute([$userId]);
 $dailyTasks = $stmt->fetchAll();
 
-
-// 4) Fetch notes
+// Fetch notes
 $notes = $pdo->query("
-    SELECT NoteID, Content
-    FROM NOTES
-    WHERE UserID = $userId
-    ORDER BY EntryDate DESC
+  SELECT NoteID, Content
+  FROM NOTES
+  WHERE UserID = $userId
+  ORDER BY EntryDate DESC
 ")->fetchAll();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,6 +140,7 @@ $notes = $pdo->query("
 </head>
 <body>
   <h1>Routine App – Main</h1>
+  <p>Welcome, <?= $userName ?>!</p>
 
   <!-- Recurring Tasks -->
   <section>
@@ -127,7 +152,6 @@ $notes = $pdo->query("
     <ul>
       <?php foreach ($recurringTasks as $t): ?>
       <li>
-        <!-- toggle complete/incomplete -->
         <form class="inline" action="update_task.php" method="POST">
           <input type="hidden" name="habit_id" value="<?= $t['HabitID'] ?>">
           <input type="hidden" name="status" value="0">
@@ -139,7 +163,6 @@ $notes = $pdo->query("
         </form>
         <?= htmlspecialchars($t['HabitName']) ?>
 
-        <!-- delete -->
         <form class="inline" action="delete_task.php" method="POST">
           <input type="hidden" name="habit_id" value="<?= $t['HabitID'] ?>">
           <button>Delete</button>
@@ -176,7 +199,6 @@ $notes = $pdo->query("
         </form>
       </li>
       <?php endforeach; ?>
-      <!-- example if you want to show a “no tasks” fallback -->
       <?php if (empty($dailyTasks)): ?>
         <li>No daily tasks yet.</li>
       <?php endif; ?>
@@ -207,8 +229,11 @@ $notes = $pdo->query("
   </section>
 
   <nav>
-  <a href="streaks.php">Streaks</a> &middot;
-  <a href="graphs.php">Graphs</a>
+    <a href="streaks.php">Streaks</a> &middot;
+    <a href="graphs.php">Graphs</a>
+    <form action="logout.php" method="post" onsubmit="return confirm('Are you sure you want to log out?');">
+      <button type="submit">Logout</button>
+    </form>
   </nav>
 </body>
 </html>
