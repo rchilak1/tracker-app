@@ -1,5 +1,5 @@
-1,JohnDoe,johndoe@example.com,password1,2025-04-01 10:00:00,NULL,Active
-2,JaneSmith,janesmith@example.com,password2,2025-04-02 12:00:00,NULL,Inactive
-3,RobertBrown,robertbrown@example.com,password3,2025-04-03 14:00:00,NULL,Active
-4,MaryJohnson,maryjohnson@example.com,password4,2025-04-04 08:30:00,NULL,Active
-5,WilliamDavis,williamdavis@example.com,password5,2025-04-05 11:45:00,NULL,Inactive
+1,JohnD,John Doe,johndoe@example.com,dog,2025-04-01 10:00:00,NULL,Active
+2,JaneS,Jane Smith,janesmith@example.com,cat,2025-04-02 12:00:00,NULL,Inactive
+3,RobBrown,Robert Brown,robertbrown@example.com,tree,2025-04-03 14:00:00,NULL,Active
+4,MJohnson,Mary Johnson,maryjohnson@example.com,fish,2025-04-04 08:30:00,NULL,Active
+5,WilliamD,William Davis,williamdavis@example.com,car,2025-04-05 11:45:00,NULL,Inactive
