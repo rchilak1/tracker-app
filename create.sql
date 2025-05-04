@@ -1,8 +1,8 @@
 -- create.sql (MySQL syntax)
 
-DROP DATABASE IF EXISTS tracker-app;
-CREATE DATABASE tracker-app;
-USE tracker-app;
+DROP DATABASE IF EXISTS tracker_app;
+CREATE DATABASE tracker_app;
+USE tracker_app;
 
 CREATE TABLE Users (
   UserID   INT            AUTO_INCREMENT PRIMARY KEY,

@@ -1,5 +1,5 @@
-USE routine_app;
--- load.sql (LOCAL enabled CSV loads)
+USE tracker_app;
+
 LOAD DATA LOCAL INFILE 'CSVs/users.csv' INTO TABLE Users
   FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'
   (UserID, Username, Name, Email, Password, CreatedAt, LastLogin, Status);
