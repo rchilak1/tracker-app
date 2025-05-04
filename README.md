@@ -31,7 +31,11 @@ cd tracker-app
 
 ### Step 2: Set Up the Database
 
-Run the below command which will do the following:
+Run the below command: 
+
+./setup.sh  
+
+This will do the following:
 
 - create the database and all necessary tables (USERS, HABITS, RECURRING_HABITS, DAILY_HABITS, PROGRESS, STREAK_HISTORY, and NOTES):
 
@@ -46,13 +50,17 @@ Run the below command which will do the following:
 
 ### Step 3: Open the Web Interface
 
-Access the application in your browser by going here: http://127.0.0.1:8000/main.php
+Access the application in your browser by going here: http://127.0.0.1:8000/login.php
 
 This is the main page. The streaks and graphs pages can be accessed via the links below (or from the main page) but are not yet set up.
 
 http://127.0.0.1:8000/streaks.php
 
 http://127.0.0.1:8000/graphs.php
+
+http://127.0.0.1:8000/main.php
+
+Now you can create users and login using their information!
 
 
 <br>
