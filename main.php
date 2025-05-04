@@ -3,7 +3,7 @@ session_start();
 
 // Initialize the PDO connection to the database
 try {
-  $pdo = new PDO('mysql:host=localhost;dbname=routine_app', 'root', '');
+  $pdo = new PDO('mysql:host=localhost;dbname=tracker-app', 'root', '');
   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
   echo 'Connection failed: ' . $e->getMessage();
@@ -126,7 +126,7 @@ $notes = $pdo->query("
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Routine App – Main</title>
+  <title>Tracker App – Main</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2rem; }
     section { margin-bottom: 2rem; }
@@ -139,7 +139,7 @@ $notes = $pdo->query("
   </style>
 </head>
 <body>
-  <h1>Routine App – Main</h1>
+  <h1>Tracker App – Main</h1>
   <p>Welcome, <?= $userName ?>!</p>
 
   <!-- Recurring Tasks -->

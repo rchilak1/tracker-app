@@ -2,7 +2,7 @@
 // db_connect.php
 
 $host   = '127.0.0.1';
-$dbname = 'routine_app';
+$dbname = 'tracker-app';
 $user   = 'root';
 $pass   = '';            // blank
 $charset= 'utf8mb4';
